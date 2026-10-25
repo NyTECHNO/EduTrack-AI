@@ -1,0 +1,71 @@
+:root {
+  /* brand (the same in both themes) */
+  --navy: #0b1f4b;
+  --navy-2: #12327a;
+  --royal: #1a45c8;
+  --royal-bright: #2563eb;
+
+  /* theme colours: light */
+  --bg: #f3f7fe;
+  --card: #ffffff;
+  --surface-1: #fafbfe;
+  --surface-2: #f6f9ff;
+  --hover: #eaf1ff;
+  --brand-soft: #e5eeff;
+  --text: #0b1f4b;
+  --heading: #0b1f4b;
+  --muted: #4b5668;
+  --faint: #7a869f;
+  --accent: #1a45c8;
+  --border: #d9e2f3;
+  --input-border: #b8c6e3;
+  --input-bg: #ffffff;
+  --code-bg: #e8eefc;
+  --off-bg: #eef0f4;
+  --topbar-bg: rgba(255, 255, 255, .94);
+  --sidebar-bg: #0b1f4b;
+  --ok-bg: #e6f6ec; --ok-text: #11633a; --ok-border: #2e9e62;
+  --danger: #b42318; --danger-bg: #fdecea; --danger-border: #d9534f;
+  --warn: #8a5a00; --warn-bg: #fff4d6; --warn-border: #d99a1c;
+  --shadow: 0 1px 2px rgba(11, 31, 75, .06), 0 4px 14px rgba(11, 31, 75, .06);
+  color-scheme: light;
+
+  /* typography: Lora for headings (academic, warm), Source Sans 3 for everything else (clear in dense tables and forms) */
+  --font-ui: 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Lora', Georgia, 'Times New Roman', serif;
+
+  --radius: .625rem;
+  --radius-lg: 1rem;
+  --sidebar-w: 16.5rem;
+  --sidebar-rail-w: 4.5rem;
+  --topbar-h: 3.5rem;
+  --page-pad: clamp(1rem, 3vw, 2rem);
+  --ease: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* dark: applied by the theme setting (System default follows the device) */
+:root[data-theme='dark'] {
+  --bg: #0a1228;
+  --card: #111b37;
+  --surface-1: #0e1630;
+  --surface-2: #16224a;
+  --hover: #1b2a55;
+  --brand-soft: #1c2e63;
+  --text: #e6edfb;
+  --heading: #f1f5ff;
+  --muted: #a8b5d3;
+  --faint: #7f8db0;
+  --accent: #8fb2ff;
+  --border: #26345c;
+  --input-border: #3b4b7a;
+  --input-bg: #0d1630;
+  --code-bg: #1b2a55;
+  --off-bg: #222e50;
+  --topbar-bg: rgba(10, 18, 40, .92);
+  --sidebar-bg: #070e22;
+  --ok-bg: #12331f; --ok-text: #6fdc9b; --ok-border: #2e9e62;
+  --danger: #ff9d95; --danger-bg: #3b1519; --danger-border: #a94a45;
+  --warn: #f3c969; --warn-bg: #3a2f0d; --warn-border: #a67a14;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 4px 14px rgba(0, 0, 0, .35);
+  color-scheme: dark;
+}

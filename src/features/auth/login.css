@@ -1,0 +1,24 @@
+.login { min-height: 100dvh; display: grid; grid-template-columns: 1fr; background: var(--bg); }
+.login__brand {
+  background: linear-gradient(165deg, var(--navy) 0%, var(--navy-2) 100%);
+  color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: clamp(1.5rem, 5vw, 3rem) 1.25rem; gap: .35rem;
+}
+.login__logo { width: clamp(6.5rem, 26vw, 15rem); height: auto; aspect-ratio: 1; }
+.login__college { font-family: var(--font-display); font-size: clamp(1.35rem, 4.5vw, 2.25rem); margin: .75rem 0 0; letter-spacing: .02em; }
+.login__system { margin: 0; font-size: clamp(1rem, 2.6vw, 1.35rem); color: #b9cdfa; font-weight: 600; }
+.login__motto { margin: .5rem 0 0; color: #d6e2ff; font-size: .95rem; max-width: 26ch; }
+.login__panel { display: grid; place-items: center; padding: clamp(1.25rem, 5vw, 3rem) 1rem; }
+.login__form {
+  width: min(100%, 26rem); background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--shadow); padding: clamp(1.25rem, 4vw, 2rem);
+  display: grid; gap: 1rem;
+}
+.login__form h2 { margin: 0; font-family: var(--font-display); color: var(--heading); font-size: 1.6rem; }
+.login__hint, .login__footnote { margin: 0; color: var(--muted); font-size: .9rem; }
+.login__footnote { text-align: center; font-size: .82rem; }
+@media (min-width: 56rem) {
+  .login { grid-template-columns: minmax(20rem, 5fr) 6fr; }
+  .login__brand { min-height: 100dvh; }
+}
+@media (max-width: 56rem) and (max-height: 32rem) { .login__brand { display: none; } }

@@ -1,0 +1,17 @@
+.chat { display: flex; flex-direction: column; gap: .6rem; width: 100%; max-width: 50rem; margin-inline: auto; height: calc(100dvh - var(--topbar-h) - 2 * var(--page-pad) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); min-height: 20rem; }
+.chat__head { display: flex; flex-wrap: wrap; gap: .4rem 1rem; align-items: center; justify-content: space-between; }
+.chat__toggle { display: inline-flex; align-items: center; gap: .5rem; font-size: .88rem; font-weight: 600; color: var(--muted); }
+.chat__log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: .6rem; padding: .25rem .1rem; }
+.msg { max-width: min(100%, 38rem); padding: .7rem .95rem; border-radius: var(--radius-lg); overflow-wrap: anywhere; }
+.msg p { margin: 0; } .msg p + p { margin-top: .5rem; }
+.msg--user { align-self: flex-end; background: var(--royal); color: #fff; border-bottom-right-radius: .25rem; }
+.msg--bot { align-self: flex-start; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow); border-bottom-left-radius: .25rem; display: grid; gap: .8rem; }
+.answer { display: grid; gap: .45rem; } .answer + .answer { padding-top: .8rem; border-top: 1px solid var(--border); }
+.answer__src { font-size: .85rem; } .answer__src a { color: var(--accent); }
+.chips-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .6rem; }
+.suggest { font: inherit; font-size: .88rem; font-weight: 600; min-height: 2.5rem; padding: .3rem .85rem; border: 1px solid var(--input-border); border-radius: 999px; background: var(--surface-2); color: var(--accent); cursor: pointer; }
+.suggest:hover { background: var(--brand-soft); }
+.chat__composer { display: flex; gap: .5rem; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.chat__composer input { flex: 1; min-width: 0; font: inherit; min-height: 2.9rem; padding: .5rem 1rem; border: 1px solid var(--input-border); border-radius: 999px; background: var(--card); color: var(--text); }
+.chat__send { width: 2.9rem; padding: 0; border-radius: 50%; display: grid; place-items: center; flex: none; }
+.note { color: var(--warn); font-size: .85rem; }
