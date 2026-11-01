@@ -8,6 +8,12 @@
 5. **Students** read only their own attendance records, grades, notifications and the classes that list them. Class lists with names and ID numbers (`rosters`) are not readable by students.
 6. **Secrets:** no Admin credentials in the frontend. `service-account.json` and `.env` are git-ignored. Firebase web config values are public identifiers, not secrets.
 
+## ID sign-in and password resets
+- Sign-in uses an internal address made from the ID number (`12-3-4567@id.edutrack.local`); IDs are unique because Firebase will not create two accounts with the same address. The ID cannot be changed after creation.
+- The internal address has no mailbox, so **an emailed password reset is impossible for ID accounts.** People can change their own password in Settings while signed in. Resetting a *forgotten* password is done by the project owner with `npm run reset:password` (uses the service-account key on their own computer; see the README). In-app resets by an Admin would need a Cloud Function (Blaze plan).
+- Older email accounts keep working with email and the usual reset email.
+- Anyone can try IDs and passwords on the login form; Firebase rate-limits repeated failures ("too many attempts"). Use strong temporary passwords.
+
 ## Activity log
 Key changes (accounts, subjects, schedules, enrollment, attendance, grades, grading settings, school information) are recorded in `activityLog` with who and when.
 The rules let anyone add an entry only under their own id and role, only Admins can read, and no one can edit or delete, so the trail can be trusted.

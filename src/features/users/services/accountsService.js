@@ -43,7 +43,7 @@ export async function createAccount({ email, displayName, role, password, detail
   } finally {
     await signOut(secondary).catch(() => {});
   }
-  logActivity({ action: 'account.created', summary: `Created a ${role} account for ${displayName.trim()} (${cleanEmail})`, targetType: 'user', targetId: credential.user.uid });
+  logActivity({ action: 'account.created', summary: `Created a ${role} account for ${displayName.trim()} (${details.idNumber || cleanEmail})`, targetType: 'user', targetId: credential.user.uid });
   return { uid: credential.user.uid };
 }
 
@@ -74,7 +74,7 @@ export async function sendResetEmail(email) {
 
 export function describeServiceError(err) {
   switch (err?.code) {
-    case 'auth/email-already-in-use': return 'An account with this email already exists.';
+    case 'auth/email-already-in-use': return 'An account with this ID number already exists.';
     case 'auth/invalid-email': return 'Enter a valid email address.';
     case 'auth/weak-password': return 'Password is too weak. Use at least 8 characters.';
     case 'permission-denied':

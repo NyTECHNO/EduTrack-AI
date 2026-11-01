@@ -1,0 +1,88 @@
+/* ---------- Messages ---------- */
+.msgs { display: flex; flex-direction: column; gap: .75rem; width: 100%; max-width: 80rem; margin-inline: auto;
+  height: calc(100dvh - var(--topbar-h) - 2 * var(--page-pad) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); min-height: 26rem; }
+.msgs__layout { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.msgs__side, .msgs__main { min-height: 0; min-width: 0; }
+.msgs__side { overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; gap: .75rem; padding: .6rem; align-content: start; }
+.msgs__main { display: flex; }
+.msgs__note { margin: 0; padding: .75rem; }
+.msgs__placeholder { flex: 1; display: grid; place-content: center; justify-items: center; gap: .4rem; text-align: center; color: var(--muted); }
+.msgs__placeholder svg { color: var(--accent); }
+.msgs__placeholder p { margin: 0; }
+
+/* Phones: show either the list or the open conversation, never both */
+@media (max-width: 47.99rem) {
+  .msgs__main { display: none; }
+  .msgs.is-thread .msgs__side { display: none; }
+  .msgs.is-thread .msgs__main { display: flex; }
+  .msgs.is-thread .msgs__head { display: none; }
+  .msgs.is-thread { min-height: 0; }
+}
+@media (min-width: 48rem) {
+  .msgs__layout { grid-template-columns: minmax(16rem, 22rem) minmax(0, 1fr); }
+  .thread__back { display: none; }
+}
+
+/* ---------- Conversation list ---------- */
+.convos { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem; }
+.convo { position: relative; display: flex; align-items: center; gap: .75rem; width: 100%; min-height: 3.75rem; padding: .55rem .7rem; border: 0; border-radius: var(--radius);
+  background: transparent; color: var(--text); font: inherit; text-align: left; cursor: pointer; }
+.convo:hover { background: var(--hover); }
+.convo.is-active { background: var(--brand-soft); }
+.convo__avatar { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--royal); color: #fff; font-weight: 700; }
+.convo__body { flex: 1; min-width: 0; display: grid; gap: .1rem; }
+.convo__top { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; min-width: 0; }
+.convo__title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1rem; }
+.convo__time { flex: none; font-size: .78rem; color: var(--muted); }
+.convo__preview { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; color: var(--muted); }
+.convo.is-unread .convo__title, .convo.is-unread .convo__preview { font-weight: 700; color: var(--text); }
+.convo__dot { flex: none; width: .65rem; height: .65rem; border-radius: 50%; background: var(--royal-bright); }
+
+/* ---------- Invitations and suggestions ---------- */
+.msgreq { display: grid; gap: .5rem; }
+.msgreq__title { margin: .25rem .25rem 0; font-size: 1rem; color: var(--heading); font-family: var(--font-display); }
+.msgreq__list { list-style: none; margin: 0; padding: 0; display: grid; gap: .5rem; }
+.msgreq__item { display: grid; gap: .6rem; padding: .8rem; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--surface-2); color: var(--text); overflow-wrap: break-word; }
+.msgreq__text { margin: .2rem 0 0; font-size: .92rem; color: var(--muted); }
+.msgreq__declined summary { cursor: pointer; min-height: 2.5rem; display: flex; align-items: center; padding: 0 .25rem; font-weight: 600; color: var(--accent); }
+.msgreq__declined .msgreq__list { margin-top: .4rem; }
+
+/* ---------- Open conversation ---------- */
+.thread { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+.thread__head { display: flex; align-items: center; gap: .6rem; padding: .6rem .75rem; border-bottom: 1px solid var(--border); background: var(--card); }
+.thread__who { flex: 1; min-width: 0; display: grid; line-height: 1.25; }
+.thread__who strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 1.02rem; color: var(--heading); }
+.thread__who span { font-size: .85rem; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.thread__invite { flex: none; }
+.thread__log { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; list-style: none; margin: 0; padding: 1rem; display: flex; flex-direction: column; gap: .5rem; background: var(--surface-2); }
+.thread__item { display: grid; gap: .5rem; }
+.thread__empty { align-self: center; margin: auto; color: var(--muted); text-align: center; }
+.thread__day { justify-self: center; margin: .4rem 0 .1rem; padding: .1rem .75rem; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--muted); font-size: .78rem; font-weight: 600; }
+.thread__error { margin: .5rem .75rem 0; }
+
+/* Every message sits in its own bubble: yours on the right in blue, theirs on the left on a bordered card */
+.bubble-row { display: flex; }
+.bubble-row.is-mine { justify-content: flex-end; }
+.bubble { max-width: min(85%, 34rem); min-width: 0; padding: .55rem .8rem .45rem; border: 1px solid var(--input-border); border-radius: 1rem 1rem 1rem .3rem;
+  background: var(--card); color: var(--text); box-shadow: var(--shadow); overflow-wrap: anywhere; }
+.bubble-row.is-mine .bubble { background: var(--royal); border-color: var(--royal); color: #fff; border-radius: 1rem 1rem .3rem 1rem; }
+.bubble__who { margin: 0 0 .2rem; display: flex; flex-wrap: wrap; align-items: center; gap: .1rem .5rem; font-size: .88rem; color: var(--accent); }
+.bubble__text { margin: 0; font-size: 1rem; line-height: 1.45; white-space: pre-wrap; }
+.bubble__time { display: block; margin-top: .2rem; text-align: right; font-size: .75rem; color: var(--muted); }
+.bubble-row.is-mine .bubble__time { color: #dbe6ff; }
+
+.thread__composer { display: flex; align-items: flex-end; gap: .5rem; padding: .6rem .75rem; border-top: 1px solid var(--border); background: var(--card); }
+.thread__composer textarea { flex: 1; min-width: 0; font: inherit; line-height: 1.4; min-height: 2.9rem; max-height: 8rem; padding: .6rem 1rem; border: 1px solid var(--input-border); border-radius: 1.4rem; background: var(--card); color: var(--text); resize: none; }
+.thread__composer textarea:focus { border-color: var(--royal-bright); }
+.thread__composer .chat__send { width: 2.9rem; height: 2.9rem; padding: 0; border-radius: 50%; display: grid; place-items: center; flex: none; }
+
+/* person picker in the New message window */
+.pick { display: block; width: 100%; min-height: 2.9rem; padding: .5rem .8rem; border: 0; background: transparent; color: var(--text); font: inherit; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: break-word; }
+.pick:hover:not(:disabled) { background: var(--hover); }
+.pick:disabled { opacity: .6; cursor: not-allowed; }
+
+@media (max-width: 30rem) {
+  .bubble { max-width: 90%; }
+  .thread__log { padding: .75rem .6rem; }
+  .thread__invite { padding-inline: .6rem; }
+}

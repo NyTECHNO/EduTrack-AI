@@ -44,10 +44,12 @@ test('notification preferences default to on', () => {
   assert.equal(getNotificationPrefs({ preferences: { notifications: { classReminders: false } } }).classReminders, false);
 });
 test('account form validation and temporary passwords', () => {
-  const v = { displayName: 'Ana Cruz', email: 'ana@jpc.edu', role: 'student', password: 'abcdefgh' };
+  const v = { displayName: 'Ana Cruz', idNumber: '12-3-4567', role: 'student', password: 'abcdefgh' };
   assert.deepEqual(validateAccountForm(v, { isEdit: false }), {});
-  assert.ok(validateAccountForm({ ...v, email: 'nope' }, { isEdit: false }).email);
+  assert.ok(validateAccountForm({ ...v, idNumber: '1234567' }, { isEdit: false }).idNumber);
+  assert.ok(validateAccountForm({ ...v, idNumber: '' }, { isEdit: false }).idNumber);
   assert.ok(validateAccountForm({ ...v, role: 'admin' }, { isEdit: false }).role);
+  assert.ok(validateAccountForm({ ...v, password: 'short' }, { isEdit: false }).password);
   const p = generateTempPassword(); assert.equal(p.length, 12); assert.doesNotMatch(p, /[0Ol1I]/);
 });
 

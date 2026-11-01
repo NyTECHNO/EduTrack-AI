@@ -1,6 +1,8 @@
+import { profileInitial, profileName } from '../../../lib/profile.js';
 import { useState } from 'react';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import { PHONE_RE, saveProfile } from '../services/profileService.js';
+import { isIdEmail } from '../../../lib/studentId.js';
 
 const ROLE_LABEL = { admin: 'Administrator', instructor: 'Instructor', student: 'Student' };
 
@@ -37,8 +39,8 @@ export default function ProfilePage() {
       <h1 className="page__title">Profile</h1>
       <div className="profile">
         <div className="card profile__card">
-          <div className="profile__avatar" aria-hidden="true">{(profile.displayName || '?').charAt(0).toUpperCase()}</div>
-          <h2>{profile.displayName}</h2>
+          <div className="profile__avatar" aria-hidden="true">{profileInitial(profile)}</div>
+          <h2>{profileName(profile)}</h2>
           <div className="profile__badges">
             <span className="badge badge--excused">{ROLE_LABEL[role]}</span>
             <span className={`badge badge--${profile.status === 'active' ? 'ok' : 'off'}`}>{profile.status === 'active' ? 'Active' : 'Inactive'}</span>
@@ -49,13 +51,13 @@ export default function ProfilePage() {
           <div className="card stack">
             <h2 className="section-title">Account details</h2>
             <dl className="facts">
-              <dt>Email</dt><dd>{profile.email}</dd>
+              {!isIdEmail(profile.email) && <><dt>Email</dt><dd>{profile.email}</dd></>}
               <dt>Role</dt><dd>{ROLE_LABEL[role]}</dd>
               <dt>Status</dt><dd>{profile.status === 'active' ? 'Active' : 'Inactive'}</dd>
               {profile.idNumber && <><dt>ID number</dt><dd>{profile.idNumber}</dd></>}
               {since && <><dt>Member since</dt><dd>{since}</dd></>}
             </dl>
-            <p className="muted small">To change your name, email, ID number or role, ask the school administrator.</p>
+            <p className="muted small">To change your name, ID number or role, ask the school administrator.</p>
           </div>
 
           <form className="card stack" onSubmit={handleSubmit} noValidate>

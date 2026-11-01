@@ -1,9 +1,9 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 html, body, #root { min-height: 100%; }
-body { margin: 0; font-family: var(--font-ui); font-weight: 400; font-size: 1.0625rem; line-height: 1.5; color: var(--text); background: var(--bg); overflow-x: hidden; }
+body { margin: 0; font-family: var(--font-ui); font-weight: 400; font-size: 1rem; text-rendering: optimizeLegibility; line-height: 1.5; color: var(--text); background: var(--bg); overflow-x: hidden; }
 img, svg { max-width: 100%; }
-h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; overflow-wrap: anywhere; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.2; letter-spacing: -.01em; overflow-wrap: break-word; }
 a { color: var(--accent); text-underline-offset: .15em; }
 .stat strong, .bignum { font-family: var(--font-display); }
 code { font-size: .9em; background: var(--code-bg); padding: .05rem .3rem; border-radius: .25rem; }
@@ -67,3 +67,9 @@ code { font-size: .9em; background: var(--code-bg); padding: .05rem .3rem; borde
 /* dark theme: form controls sit slightly darker than the card they are on */
 :root[data-theme='dark'] input:not([type='checkbox']):not([type='radio']), :root[data-theme='dark'] select, :root[data-theme='dark'] textarea { background-color: var(--input-bg); }
 .searchfield { width: 100%; min-height: 2.75rem; padding: .5rem .75rem; border: 1px solid var(--input-border); border-radius: var(--radius); font: inherit; background: var(--card); color: var(--text); }
+
+/* clearer text on dark: a touch more weight, and placeholders that can actually be read */
+:root[data-theme='dark'] body { font-weight: 450; }
+::placeholder { color: var(--faint); opacity: 1; }
+:root[data-theme='dark'] .datefield { background-color: var(--input-bg); }
+@media (max-width: 47.99rem) { input, select, textarea { font-size: 1rem; } } /* 16px stops iPhones zooming in on focus */

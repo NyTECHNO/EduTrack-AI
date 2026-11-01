@@ -20,10 +20,29 @@ For each width, as each role, open every page and confirm:
 - **Cross-checks:** a deactivated user cannot sign in; a student opening `/accounts` is sent to the dashboard; an instructor cannot read another instructor's class.
 - **Reminders:** schedule a class today starting in 10 to 25 minutes; the bell, toast and (if allowed) browser notification appear once.
 
+## Header account menu
+- [ ] Click your name in the header: a menu opens with Profile, Settings and Log out (the sidebar no longer has them). Clicking outside or pressing Esc closes it; Up/Down/Home/End move between items; Log out signs you out
+- [ ] The name is never blank: an account without a name shows its ID number or email
+- [ ] On a phone the menu stays inside the screen
+
+## Sign-in and install
+- [ ] Login asks for an ID number; typing `1234567` shows `12-3-4567`; a wrong format is refused with a clear message; a wrong ID or password says "ID number or password is incorrect"
+- [ ] Admin: creating an account needs an ID in the 12-3-4567 format and shows the ID (not an email) with the temporary password; a second account with the same ID is refused
+- [ ] The first screen (and Settings > Appearance) is Light by default; Dark only appears after choosing it, and survives reload
+- [ ] Built app (`npm run build && npm run preview`): the browser offers Install; the installed app opens in its own window with the seal icon; turning the network off still opens the app or shows the offline page; Settings > Install the app reflects the state
+- [ ] iPhone/iPad: Share > Add to Home Screen gives the seal icon and opens without browser bars
+
 ## Appearance
 - [ ] Settings > Appearance: System default, Light and Dark each apply at once and survive a reload (no flash of the wrong theme)
 - [ ] In Dark, check every page for text that is hard to read, white patches, or unreadable inputs, tables, calendar days, chat bubbles and modals
-- [ ] Headings use Lora and everything else Source Sans 3 (needs internet for Google Fonts; a plain serif/sans fallback is used offline)
+- [ ] Text is Public Sans in both themes and easy to read, including placeholders and small text (needs internet for Google Fonts; a plain system font is used offline)
+- [ ] No word is ever split in the middle (look at table cells such as Status, Source and Actions at narrow widths)
+- [ ] Filter bars (Accounts, Attendance and Grade reports, Activity log): every box has the same height and look, and From/To dates show their label inside the box
+
+## Accounts navigation bar and chat
+- [ ] Accounts: scroll down about 16px; the bar morphs into a floating pill (shadow follows the pill), and scrolling back up restores the full-width bar. Tabs (All, Students, Instructors, Admins) filter the list and stay clickable and visible in both states
+- [ ] With "reduce motion" enabled in your system, the bar switches states without animation
+- [ ] School assistant: hover (or Tab to) a message; it grows and the others dim, and everything returns together when the pointer leaves the list. With reduce motion, only the dimming remains
 
 ## Admin activity
 - [ ] After creating an account, saving attendance or grades, and cancelling a class, each appears in **Activity log** with the right name and time

@@ -1,3 +1,4 @@
+import { profileName } from '../../../lib/profile.js';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import Modal from '../../../components/ui/Modal.jsx';
@@ -104,7 +105,7 @@ export default function InstructorGradebook({ schedules, settings }) {
       const numeric = Object.fromEntries(roster.map((p) => [p.uid, Object.fromEntries(
         Object.entries(sc[p.uid] || {}).map(([k, v]) => [k, toNum(v)]).filter(([, v]) => v != null && Number.isFinite(v)))]));
       await saveGradebook({
-        schedule, period, instructor: { uid: user.uid, name: profile.displayName }, method, weights: numWeights, roster,
+        schedule, period, instructor: { uid: user.uid, name: profileName(profile) }, method, weights: numWeights, roster,
         assessments: list, scores: numeric,
         manual: Object.fromEntries(roster.map((p) => [p.uid, toNum(manual[p.uid])]).filter(([, v]) => v != null && Number.isFinite(v))),
         remarks, settings,

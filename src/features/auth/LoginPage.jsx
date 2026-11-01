@@ -1,34 +1,37 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/logos/jpc-logo.png';
-import { signIn, describeAuthError } from '../../firebase/auth.js';
+import { signIn, signInWithId, describeAuthError } from '../../firebase/auth.js';
 import { isFirebaseConfigured } from '../../firebase/firebase.js';
+import { ALLOW_EMAIL_LOGIN, ID_EXAMPLE, formatIdInput, isValidId } from '../../lib/studentId.js';
 import { useAuth } from './AuthContext.jsx';
 import './login.css';
 
 export default function LoginPage() {
   const { user, loading, error: accountError, clearError } = useAuth();
   const location = useLocation();
-  const [email, setEmail] = useState('');
+  const [mode, setMode] = useState('id'); // 'id' (normal) or 'email' (older accounts only)
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   if (!loading && user) return <Navigate to={location.state?.from?.pathname || '/dashboard'} replace />;
 
+  const switchMode = (next) => { setMode(next); setIdentifier(''); setError(''); clearError(); };
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError('');
     clearError();
-    if (!email.trim() || !password) {
-      setError('Enter your email and password.');
-      return;
-    }
+    if (mode === 'id' && !isValidId(identifier)) { setError(`Enter your ID number as ${ID_EXAMPLE}.`); return; }
+    if (mode === 'email' && !identifier.trim()) { setError('Enter your email.'); return; }
+    if (!password) { setError('Enter your password.'); return; }
     setBusy(true);
     try {
-      await signIn(email, password);
+      await (mode === 'id' ? signInWithId(identifier, password) : signIn(identifier, password));
     } catch (err) {
-      setError(describeAuthError(err));
+      setError(describeAuthError(err, mode));
     } finally {
       setBusy(false);
     }
@@ -48,7 +51,7 @@ export default function LoginPage() {
       <section className="login__panel">
         <form className="login__form" onSubmit={handleSubmit} noValidate>
           <h2>Sign in</h2>
-          <p className="login__hint">Use the email and password given to you by the school.</p>
+          <p className="login__hint">Use the ID number and password given to you by the school.</p>
 
           {!isFirebaseConfigured && (
             <p className="alert alert--warn" role="alert">
@@ -57,20 +60,35 @@ export default function LoginPage() {
           )}
           {message && <p className="alert alert--error" role="alert">{message}</p>}
 
-          <label className="field">
-            <span>Email</span>
-            <input type="email" autoComplete="username" inputMode="email" value={email}
-              onChange={(e) => setEmail(e.target.value)} required />
-          </label>
+          {mode === 'id' ? (
+            <label className="field">
+              <span>ID number</span>
+              <input value={identifier} onChange={(e) => setIdentifier(formatIdInput(e.target.value))} inputMode="numeric"
+                autoComplete="username" placeholder={ID_EXAMPLE} maxLength={9} required />
+              <span className="field__hint">Format: {ID_EXAMPLE}</span>
+            </label>
+          ) : (
+            <label className="field">
+              <span>Email</span>
+              <input type="email" autoComplete="username" inputMode="email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} required />
+            </label>
+          )}
           <label className="field">
             <span>Password</span>
-            <input type="password" autoComplete="current-password" value={password}
-              onChange={(e) => setPassword(e.target.value)} required />
+            <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </label>
 
           <button className="btn btn--primary btn--block" type="submit" disabled={busy || !isFirebaseConfigured}>
             {busy ? 'Signing in…' : 'Sign in'}
           </button>
+
+          {ALLOW_EMAIL_LOGIN && (
+            <p className="login__alt">
+              <button type="button" className="linkbtn" onClick={() => switchMode(mode === 'id' ? 'email' : 'id')}>
+                {mode === 'id' ? 'Older account? Sign in with email' : 'Use my ID number instead'}
+              </button>
+            </p>
+          )}
           <p className="login__footnote">Accounts are created by the school administrator. There is no public sign-up.</p>
         </form>
       </section>

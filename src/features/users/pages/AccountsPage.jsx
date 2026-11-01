@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import ShowMore from '../../../components/ui/ShowMore.jsx';
 import Modal from '../../../components/ui/Modal.jsx';
+import MorphBar from '../../../components/ui/MorphBar.jsx';
+import { accountLabel, idToEmail, isIdEmail } from '../../../lib/studentId.js';
 import AccountForm from '../components/AccountForm.jsx';
 import {
   createAccount, updateAccount, setAccountStatus, sendResetEmail, fetchAccounts, describeServiceError,
 } from '../services/accountsService.js';
 
+const ROLE_TABS = [['all', 'All'], ['student', 'Students'], ['instructor', 'Instructors'], ['admin', 'Admins']];
 const ROLE_LABEL = { admin: 'Admin', instructor: 'Instructor', student: 'Student' };
 
 export default function AccountsPage() {
@@ -18,7 +21,7 @@ export default function AccountsPage() {
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [form, setForm] = useState(null);           // null | { account? }
-  const [credentials, setCredentials] = useState(null); // { email, password }
+  const [credentials, setCredentials] = useState(null); // { idNumber, password }
   const [confirm, setConfirm] = useState(null);     // account awaiting (de)activation
   const [working, setWorking] = useState(false);
 
@@ -52,14 +55,14 @@ export default function AccountsPage() {
   async function handleSave(values) {
     try {
       if (form.account) {
-        await updateAccount({ uid: form.account.id, previous: form.account, displayName: values.displayName, role: values.role, idNumber: values.idNumber, phone: values.phone });
+        await updateAccount({ uid: form.account.id, previous: form.account, displayName: values.displayName, role: values.role, idNumber: values.idNumber.trim(), phone: values.phone });
         setNotice({ type: 'ok', text: 'Account updated.' });
       } else {
         await createAccount({
-          email: values.email, displayName: values.displayName, role: values.role, password: values.password,
-          details: { idNumber: values.idNumber, phone: values.phone },
+          email: idToEmail(values.idNumber), displayName: values.displayName, role: values.role, password: values.password,
+          details: { idNumber: values.idNumber.trim(), phone: values.phone },
         });
-        setCredentials({ email: values.email.trim().toLowerCase(), password: values.password });
+        setCredentials({ idNumber: values.idNumber.trim(), password: values.password });
         setNotice({ type: 'ok', text: 'Account created.' });
       }
       setForm(null);
@@ -87,6 +90,11 @@ export default function AccountsPage() {
   }
 
   async function handleReset(account) {
+    if (isIdEmail(account.email)) {
+      // ID accounts have no mailbox. A reset needs a server (see docs/SECURITY.md); until then the person can change it in Settings.
+      setNotice({ type: 'error', text: `${account.displayName} signs in with an ID number, so there is no email to send a reset to. They can change their password in Settings while signed in. If it is forgotten, whoever manages the project can set a new one with the reset-password tool (see the README).` });
+      return;
+    }
     try {
       await sendResetEmail(account.email);
       setNotice({ type: 'ok', text: `Password reset email sent to ${account.email}.` });
@@ -99,25 +107,25 @@ export default function AccountsPage() {
 
   return (
     <section className="page__section">
-      <div className="page__head">
-        <div>
-          <h1 className="page__title">Accounts</h1>
-          <p className="muted">{counts.students} active students · {counts.instructors} active instructors</p>
-        </div>
-        <button type="button" className="btn btn--primary" onClick={() => setForm({})}>New account</button>
-      </div>
+      <MorphBar label="Account type"
+        left={<h1 className="morph__title">Accounts</h1>}
+        center={(
+          <div className="pilltabs">
+            {ROLE_TABS.map(([key, label]) => (
+              <button key={key} type="button" className="pilltab" aria-current={roleFilter === key} onClick={() => setRoleFilter(key)}>
+                {label}<span className="pilltab__count">{key === 'all' ? accounts.length : accounts.filter((a) => a.role === key).length}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        right={<button type="button" className="btn btn--primary" onClick={() => setForm({})}>New account</button>} />
+      <p className="muted">{counts.students} active students · {counts.instructors} active instructors</p>
 
       {notice && <p className={`alert alert--${notice.type}`} role={notice.type === 'error' ? 'alert' : 'status'}>{notice.text}</p>}
 
-      <div className="toolbar">
-        <input type="search" className="toolbar__search" placeholder="Search name, email or ID number" value={search}
+      <div className="toolbar toolbar--2">
+        <input type="search" className="toolbar__search" placeholder="Search name or ID number" value={search}
           onChange={(e) => setSearch(e.target.value)} aria-label="Search accounts" />
-        <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} aria-label="Filter by role">
-          <option value="all">All roles</option>
-          <option value="student">Students</option>
-          <option value="instructor">Instructors</option>
-          <option value="admin">Admins</option>
-        </select>
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} aria-label="Filter by status">
           <option value="all">Any status</option>
           <option value="active">Active</option>
@@ -143,7 +151,7 @@ export default function AccountsPage() {
                   const isAdmin = a.role === 'admin';
                   return (
                     <tr key={a.id}>
-                      <td data-label="Name"><strong>{a.displayName}</strong><br /><span className="muted">{a.email}</span></td>
+                      <td data-label="Name"><strong>{a.displayName}</strong><br /><span className="muted">{accountLabel(a)}</span></td>
                       <td data-label="Role">{ROLE_LABEL[a.role] || a.role}</td>
                       <td data-label="ID number">{a.idNumber || '—'}</td>
                       <td data-label="Status"><span className={`badge badge--${a.status === 'active' ? 'ok' : 'off'}`}>{a.status === 'active' ? 'Active' : 'Inactive'}</span></td>
@@ -172,10 +180,10 @@ export default function AccountsPage() {
           footer={<button type="button" className="btn btn--primary" onClick={() => setCredentials(null)}>Done</button>}>
           <p>Give these sign-in details to the user. The password is shown only now and is not saved anywhere.</p>
           <dl className="creds">
-            <dt>Email</dt><dd>{credentials.email}</dd>
+            <dt>ID number</dt><dd>{credentials.idNumber}</dd>
             <dt>Temporary password</dt><dd><code>{credentials.password}</code></dd>
           </dl>
-          <button type="button" className="btn btn--ghost" onClick={() => copy(`Email: ${credentials.email}\nPassword: ${credentials.password}`)}>Copy details</button>
+          <button type="button" className="btn btn--ghost" onClick={() => copy(`ID number: ${credentials.idNumber}\nTemporary password: ${credentials.password}`)}>Copy details</button>
         </Modal>
       )}
 

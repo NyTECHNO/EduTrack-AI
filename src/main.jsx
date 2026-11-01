@@ -13,6 +13,14 @@ createRoot(document.getElementById('root')).render(
   </React.StrictMode>
 );
 
-if ('serviceWorker' in navigator) {
+// Install prompt: Chrome and Edge fire this once, early. Keep it so Settings and the login page can offer "Install app".
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  window.__edutrackInstall = event;
+  window.dispatchEvent(new Event('edutrack:installable'));
+});
+
+// The service worker (offline support and installability) runs in the built app only, so it never serves stale files while developing.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => { navigator.serviceWorker.register('/service-worker.js').catch(() => {}); });
 }

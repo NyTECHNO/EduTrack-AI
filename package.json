@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "seed:admin": "node scripts/seed-admin.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "reset:password": "node scripts/reset-password.mjs"
   },
   "dependencies": {
     "firebase": "^10.14.1",

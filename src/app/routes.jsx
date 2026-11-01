@@ -17,6 +17,7 @@ import ProfilePage from '../features/profile/pages/ProfilePage.jsx';
 import SettingsPage from '../features/settings/pages/SettingsPage.jsx';
 import ActivityPage from '../features/activity/pages/ActivityPage.jsx';
 import MySchedulePage from '../features/schedules/pages/MySchedulePage.jsx';
+import MessagesPage from '../features/messages/pages/MessagesPage.jsx';
 import { ALL_NAV_ITEMS } from '../components/layout/navConfig.js';
 
 // Finished modules are registered here; everything else still shows the placeholder.
@@ -30,6 +31,7 @@ const PAGES = {
   '/profile': ProfilePage,
   '/settings': SettingsPage,
   '/chatbot': ChatbotPage,
+  '/messages': MessagesPage,
   '/school-info': SchoolInfoPage,
   '/calendar': CalendarPage,
   '/grades': GradesPage,

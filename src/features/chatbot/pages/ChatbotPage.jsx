@@ -1,3 +1,4 @@
+import { profileName } from '../../../lib/profile.js';
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import ChatMessage from '../components/ChatMessage.jsx';
@@ -9,11 +10,12 @@ import './chat.css';
 let nextId = 1;
 
 export default function ChatbotPage() {
-  const { role } = useAuth();
+  const { role, profile } = useAuth();
   const [includeDrafts, setIncludeDrafts] = useState(false); // admin-only preview, so drafts can be tested before publishing
   const { loading, entries, error } = useKnowledge(role === 'admin' && includeDrafts);
   const [messages, setMessages] = useState([{ id: 0, from: 'bot', reply: { kind: 'greeting' } }]);
   const [text, setText] = useState('');
+  const [activeId, setActiveId] = useState(null); // the spotlighted message; cleared only when the pointer or focus leaves the whole list
   const logRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -37,8 +39,12 @@ export default function ChatbotPage() {
         )}
       </header>
       {error && <p className="alert alert--error" role="alert">{error}</p>}
-      <div className="chat__log" ref={logRef} role="log" aria-live="polite" aria-label="Conversation">
-        {messages.map((m) => <ChatMessage key={m.id} message={m} onAsk={ask} />)}
+      <div className={`chat__log${activeId !== null ? ' is-spot' : ''}`} ref={logRef} role="log" aria-live="polite" aria-label="Conversation"
+        onPointerLeave={() => setActiveId(null)}
+        onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setActiveId(null); }}>
+        {messages.map((m) => (
+          <ChatMessage key={m.id} message={m} onAsk={ask} active={activeId === m.id} onActivate={setActiveId} userName={profileName(profile)} />
+        ))}
       </div>
       <form className="chat__composer" onSubmit={(e) => { e.preventDefault(); ask(text); }}>
         <input ref={inputRef} value={text} onChange={(e) => setText(e.target.value)} placeholder={loading ? 'Loading school information…' : 'Ask about the school…'}

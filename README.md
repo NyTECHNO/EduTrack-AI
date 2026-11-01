@@ -35,7 +35,7 @@ npm run dev                 # http://localhost:5173
    ```bash
    # PowerShell:  $env:GOOGLE_APPLICATION_CREDENTIALS=".\service-account.json"
    # Mac/Linux:   export GOOGLE_APPLICATION_CREDENTIALS=./service-account.json
-   npm run seed:admin -- admin@yourschool.edu "Full Name" "a-strong-password"
+   npm run seed:admin -- 00-0-0001 "Full Name" "a-strong-password"     # signs in with the ID number 00-0-0001
    ```
 5. Sign in, then in this order: **Grading settings** (review the placeholders and save), **Subjects**, **Accounts**, **Schedules**,
    **School information** (import the suggested drafts, review and publish).
@@ -48,10 +48,41 @@ firebase deploy --only hosting
 ```
 The hosting address is added to Firebase Authentication's authorized domains automatically.
 
+## Look and feel
+
+Font: Public Sans everywhere (sturdy, open letterforms that stay crisp on light and dark backgrounds). The theme is stored per device and applied before the first paint.
+All colours are CSS variables in `src/styles/tokens.css` (light values on `:root`, dark values on `:root[data-theme='dark']`).
+
+## Signing in
+
+Everyone signs in with their **ID number** in the format `12-3-4567` (two digits, one digit, four digits) and a password. The field adds the hyphens as you type.
+Admins enter the ID when creating an account; it cannot be changed afterwards. Internally the ID becomes an address like `12-3-4567@id.edutrack.local`
+(Firebase Authentication needs one); nobody ever sees it and it never receives mail. Older accounts made with a real email can still sign in through the small
+"Older account? Sign in with email" link; set `ALLOW_EMAIL_LOGIN = false` in `src/lib/studentId.js` once every account has an ID.
+
+## Forgot a password (including the Admin's)
+
+An Admin cannot see anyone's password, and ID accounts have no mailbox for a reset email, so the project owner resets it from their own computer with the service-account key
+(the same key used to create the first Admin; keep it private). From the `edutrack-ai` folder:
+```bash
+# PowerShell:  $env:GOOGLE_APPLICATION_CREDENTIALS=".\service-account.json"
+# Mac/Linux:   export GOOGLE_APPLICATION_CREDENTIALS=./service-account.json
+npm run reset:password -- --list                              # shows every account and how it signs in
+npm run reset:password -- 00-0-0001 'MyNewPassword123'        # ID number (or the email of an older account) + new password
+```
+The new password must be at least 8 characters (use single quotes in PowerShell). The account is signed out everywhere, then signs in with the new password and can change it in
+Settings. The tool warns if the account is deactivated or has no profile. If you ever lose the service-account key, generate a new one in Firebase (Project settings > Service accounts).
+
+## Install as an app (PWA)
+
+The built site is installable on Android, Windows, macOS, ChromeOS and iPhone/iPad. Build and deploy it (`npm run build`, `firebase deploy --only hosting`), open the
+https address, then use **Settings > Install the app** (or the install icon in the address bar; on iPhone use Share > Add to Home Screen). It gets its own window and icon,
+opens even when the connection drops (a friendly offline page, with the last loaded screens kept), and Firebase data is never cached, so grades and attendance are always live.
+To try it on your computer: `npm run build && npm run preview`, then open http://localhost:4173. The service worker only runs in the built app, not in `npm run dev`.
+
 ## Appearance
 
-Fonts: Lora (headings) and Source Sans 3 (text). Settings > Appearance offers **System default, Light and Dark**; the choice is stored per device and applied before the first paint.
-All colours are CSS variables in `src/styles/tokens.css` (light values on `:root`, dark values on `:root[data-theme='dark']`).
+Light is the default. Dark mode is optional (Settings > Appearance) and remembered per device.
 
 ## Roles
 

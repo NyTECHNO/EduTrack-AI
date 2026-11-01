@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom';
 import logo from '../../assets/logos/jpc-logo-128.png';
 import Icon from '../ui/Icon.jsx';
 
-// Collapsed rail shows icons only. Clicking a link navigates without expanding
-// (stopPropagation); clicking blank rail space expands it, like ChatGPT's sidebar.
-export default function Sidebar({ nav, collapsed, isMobile, open, onExpand, onClose, onSignOut }) {
+// Collapsed rail shows icons only. The toggle button lives inside the sidebar
+// so it is always visible in both expanded and rail states.
+export default function Sidebar({ nav, collapsed, isMobile, open, onToggle, onExpand, onClose }) {
   const rail = collapsed && !isMobile;
   const stop = (e) => e.stopPropagation();
   const handleNavigate = (e) => { stop(e); if (isMobile) onClose(); };
@@ -23,9 +23,14 @@ export default function Sidebar({ nav, collapsed, isMobile, open, onExpand, onCl
     <>
       {isMobile && open && <div className="scrim" onClick={onClose} aria-hidden="true" />}
       <aside id="sidebar" className={`sidebar${rail ? ' is-rail' : ''}${isMobile ? ' is-drawer' : ''}${open ? ' is-open' : ''}`}
-        onClick={() => rail && onExpand()} aria-label="Main navigation">
+        aria-label="Main navigation">
         <div className="sidebar__brand">
-          <img src={logo} alt="John Paul College seal" width="40" height="40" />
+          {/* Toggle button: collapses/expands on desktop, opens/closes drawer on mobile */}
+          <button type="button" className="icon-btn sidebar__toggle" onClick={(e) => { stop(e); onToggle(); }}
+            aria-label={rail ? 'Expand navigation' : 'Collapse navigation'} aria-controls="sidebar">
+            <Icon name="menu" />
+          </button>
+          <img src={logo} alt="John Paul College seal" width="40" height="40" className="sidebar__logo" />
           <div className="sidebar__title">
             <strong>JOHN PAUL COLLEGE</strong>
             <span>EduTrack AI</span>
@@ -46,18 +51,6 @@ export default function Sidebar({ nav, collapsed, isMobile, open, onExpand, onCl
           ))}
         </nav>
 
-        <div className="sidebar__foot">
-          <ul>
-            {nav.account.map(renderItem)}
-            <li>
-              <button type="button" className="nav__link nav__link--button" title={rail ? 'Log out' : undefined}
-                onClick={(e) => { stop(e); onSignOut(); }}>
-                <Icon name="logout" />
-                <span className="nav__label">Log out</span>
-              </button>
-            </li>
-          </ul>
-        </div>
       </aside>
     </>
   );

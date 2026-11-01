@@ -31,6 +31,10 @@ export const NAV_GROUPS = [
     ],
   },
   {
+    label: 'Communication',
+    items: [{ path: '/messages', label: 'Messages', icon: 'mail', roles: ALL, phase: 16, blurb: 'Private messages and subject group chats.' }],
+  },
+  {
     label: 'Help',
     items: [{ path: '/chatbot', label: 'School assistant', icon: 'message', roles: ALL, phase: 11, blurb: 'Ask about the college’s history, mission, values and programs.' }],
   },

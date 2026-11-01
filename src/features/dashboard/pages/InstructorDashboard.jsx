@@ -1,3 +1,4 @@
+import { profileName } from '../../../lib/profile.js';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../auth/AuthContext.jsx';
@@ -39,7 +40,7 @@ export default function InstructorDashboard() {
 
   return (
     <section className="page__section">
-      <h1 className="page__title">Welcome, {profile.displayName}</h1>
+      <h1 className="page__title">Welcome, {profileName(profile)}</h1>
       <p className="muted">{formatDate(today)}</p>
       {error && <p className="alert alert--error" role="alert">{error}</p>}
 

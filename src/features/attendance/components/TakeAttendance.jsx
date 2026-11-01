@@ -1,3 +1,4 @@
+import { profileName } from '../../../lib/profile.js';
 import { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../auth/AuthContext.jsx';
 import StatusPicker from './StatusPicker.jsx';
@@ -57,7 +58,7 @@ export default function TakeAttendance({ schedules, initial }) {
     if (unmarked) { setMessage({ type: 'error', text: `Mark every student before saving (${unmarked} left).` }); return; }
     setSaving(true); setMessage(null);
     try {
-      await saveAttendance({ schedule, instructor: { uid: user.uid, name: profile.displayName }, date, note, roster, marks, exists });
+      await saveAttendance({ schedule, instructor: { uid: user.uid, name: profileName(profile) }, date, note, roster, marks, exists });
       setExists(true);
       setMessage({ type: 'ok', text: exists ? 'Attendance corrected.' : 'Attendance saved.' });
     } catch {

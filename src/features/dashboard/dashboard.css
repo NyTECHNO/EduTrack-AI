@@ -12,7 +12,7 @@
 .classrow { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem .75rem; padding: .65rem 0; border-top: 1px solid var(--border); }
 .classrow:first-child { border-top: 0; }
 .classrow--off { opacity: .65; }
-.classrow__main { min-width: 0; flex: 1 1 12rem; display: grid; gap: .1rem; overflow-wrap: anywhere; }
+.classrow__main { min-width: 0; flex: 1 1 12rem; display: grid; gap: .1rem; overflow-wrap: break-word; }
 .classrow__main p { margin: 0; }
 .classrow__side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .4rem; }
 
@@ -20,8 +20,8 @@
 .nextcard p, .nextcard h2 { margin: 0; }
 .nextcard__label { font-size: .8rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #9db8f5; }
 .nextcard__when { font-size: 1.05rem; font-weight: 700; color: #cfe0ff; }
-.nextcard__title { font-size: clamp(1.25rem, 3vw, 1.6rem); overflow-wrap: anywhere; }
-.nextcard__meta { color: #dbe6ff; overflow-wrap: anywhere; }
+.nextcard__title { font-size: clamp(1.25rem, 3vw, 1.6rem); overflow-wrap: break-word; }
+.nextcard__meta { color: #dbe6ff; overflow-wrap: break-word; }
 .nextcard__none { color: #dbe6ff; }
 
 .stat--link { text-decoration: none; color: inherit; transition: border-color .15s; }

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import Modal from '../../../components/ui/Modal.jsx';
 import { validateAccountForm } from '../../../lib/validators.js';
 import { generateTempPassword } from '../../../lib/password.js';
+import { ID_EXAMPLE, formatIdInput, isIdEmail } from '../../../lib/studentId.js';
 
 export default function AccountForm({ account, onSubmit, onClose }) {
   const isEdit = Boolean(account);
+  const idLocked = isEdit && isIdEmail(account.email); // an ID account signs in with its ID, so the ID cannot change
   const [values, setValues] = useState({
     displayName: account?.displayName || '',
-    email: account?.email || '',
     role: account?.role || 'student',
     idNumber: account?.idNumber || '',
     phone: account?.phone || '',
@@ -52,9 +53,11 @@ export default function AccountForm({ account, onSubmit, onClose }) {
         </label>
 
         <label className="field span-2">
-          <span>Email</span>
-          <input type="email" value={values.email} onChange={set('email')} disabled={isEdit} autoComplete="off" />
-          {errors.email && <span className="field__error">{errors.email}</span>}
+          <span>ID number</span>
+          <input value={values.idNumber} inputMode="numeric" placeholder={ID_EXAMPLE} maxLength={9} autoComplete="off"
+            disabled={idLocked} onChange={(e) => setValues((v) => ({ ...v, idNumber: isEdit ? e.target.value : formatIdInput(e.target.value) }))} />
+          <small className="muted">{idLocked ? 'The ID number is used to sign in, so it cannot be changed.' : `Used to sign in. Format ${ID_EXAMPLE}. It cannot be changed later.`}</small>
+          {errors.idNumber && <span className="field__error">{errors.idNumber}</span>}
         </label>
 
         <label className="field">
@@ -67,11 +70,6 @@ export default function AccountForm({ account, onSubmit, onClose }) {
         </label>
 
         <label className="field">
-          <span>ID number (optional)</span>
-          <input value={values.idNumber} onChange={set('idNumber')} maxLength={40} autoComplete="off" />
-        </label>
-
-        <label className="field span-2">
           <span>Phone (optional)</span>
           <input type="tel" value={values.phone} onChange={set('phone')} maxLength={30} autoComplete="off" />
         </label>
@@ -86,7 +84,7 @@ export default function AccountForm({ account, onSubmit, onClose }) {
               </button>
             </div>
             {errors.password && <span className="field__error">{errors.password}</span>}
-            <small className="muted">You will see this once after creating the account. It is never stored.</small>
+            <small className="muted">You will see this once after creating the account. It is never stored. The person can change it in Settings.</small>
           </div>
         )}
       </form>

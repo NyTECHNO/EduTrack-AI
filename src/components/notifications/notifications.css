@@ -13,7 +13,7 @@
 .notif__dot { flex: none; width: .55rem; height: .55rem; margin-top: .4rem; border-radius: 50%; background: transparent; }
 .notif.is-unread .notif__dot { background: var(--royal-bright); }
 .notif.is-unread { background: var(--surface-2); }
-.notif__text { display: grid; gap: .1rem; min-width: 0; overflow-wrap: anywhere; }
+.notif__text { display: grid; gap: .1rem; min-width: 0; overflow-wrap: break-word; }
 .notif__text span { color: var(--muted); font-size: .9rem; }
 .notif__text small { color: var(--faint); }
 
@@ -21,7 +21,7 @@
 @media (min-width: 40rem) { .toasts { left: auto; right: 1rem; width: 24rem; } }
 .toast { pointer-events: auto; display: flex; align-items: flex-start; gap: .6rem; padding: .75rem .5rem .75rem .9rem; background: var(--navy); color: #fff; border-radius: var(--radius-lg); box-shadow: 0 .75rem 2rem rgba(0, 0, 0, .3); }
 .toast > svg { flex: none; margin-top: .15rem; color: #9db8f5; }
-.toast__text { display: grid; gap: .1rem; min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.toast__text { display: grid; gap: .1rem; min-width: 0; flex: 1; overflow-wrap: break-word; }
 .toast__text span { color: #d6e2ff; font-size: .9rem; }
 .toast .icon-btn { color: #fff; width: 2.25rem; height: 2.25rem; }
 @media (prefers-reduced-motion: no-preference) { .toast { animation: toast-in .25s var(--ease); } @keyframes toast-in { from { transform: translateY(.75rem); opacity: 0; } } }

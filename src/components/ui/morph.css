@@ -1,0 +1,42 @@
+/* critically damped spring: a plain ease-out where linear() is unsupported, the real spring where it is */
+:root { --spring: cubic-bezier(.22, 1, .36, 1); }
+@supports (transition-timing-function: linear(0, 1)) {
+  :root { --spring: linear(0, 0.094 5.6%, 0.274 11.1%, 0.455 16.7%, 0.608 22.2%, 0.726 27.8%, 0.812 33.3%, 0.873 38.9%, 0.944 50%, 0.976 61.1%, 1 100%); }
+}
+
+.morph__sentinel { height: 1px; margin-bottom: -1px; pointer-events: none; }
+.morph {
+  --inset: 12%; --round: 999px; --bar-round: 1rem;
+  position: sticky; top: calc(var(--topbar-h) + env(safe-area-inset-top, 0px)); z-index: 20; margin-block: .5rem;
+  transition: transform 600ms var(--spring), filter 600ms var(--spring);
+}
+/* the floating shadow follows the clipped shape (box-shadow would not) */
+.morph.is-floating { transform: translateY(5px); filter: drop-shadow(0 10px 18px rgba(11, 31, 75, .18)) drop-shadow(0 2px 4px rgba(11, 31, 75, .12)); }
+:root[data-theme='dark'] .morph.is-floating { filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55)) drop-shadow(0 2px 4px rgba(0, 0, 0, .4)); }
+
+.morph__bg { position: absolute; inset: 0; pointer-events: none; background: var(--card); box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: inset(0 0 0 0 round var(--bar-round)); transition: clip-path 600ms var(--spring); }
+.morph.is-floating .morph__bg { clip-path: inset(0 var(--inset) 0 var(--inset) round var(--round)); }
+
+/* the content always sits where the pill will be, so nothing has to animate width or padding */
+.morph__inner { position: relative; width: calc(100% - 2 * var(--inset)); margin-inline: auto; min-height: 3.5rem; display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+.morph__left, .morph__right { flex: none; min-width: 0; transition: transform 600ms var(--spring); }
+.morph.is-floating .morph__left { transform: translateX(26px); }
+.morph.is-floating .morph__right { transform: translateX(-26px); }
+.morph__nav { min-width: 0; }
+.morph__title { margin: 0; font-size: 1.25rem; color: var(--heading); }
+
+@media (max-width: 63.99rem) { .morph { --inset: 5%; } }
+@media (max-width: 47.99rem) {
+  .morph { --inset: 3%; --round: 1.75rem; --bar-round: .875rem; }
+  .morph__inner { flex-wrap: wrap; padding-block: .5rem; }
+  .morph__nav { order: 3; width: 100%; overflow-x: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .morph, .morph__bg, .morph__left, .morph__right { transition: none; } }
+
+/* navigation links as pills */
+.pilltabs { display: inline-flex; gap: .2rem; padding: .2rem; border-radius: 999px; background: var(--surface-2); max-width: 100%; }
+.pilltab { font: inherit; font-weight: 600; font-size: .92rem; min-height: 2.4rem; padding: 0 .95rem; border: 0; border-radius: 999px; background: transparent; color: var(--text); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: .4rem; }
+.pilltab:hover { background: var(--hover); }
+.pilltab[aria-current='true'] { background: var(--royal); color: #fff; }
+.pilltab__count { font-size: .78rem; font-weight: 700; opacity: .9; }

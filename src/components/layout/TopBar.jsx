@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Icon from '../ui/Icon.jsx';
 import NotificationBell from '../notifications/NotificationBell.jsx';
+import UserMenu from './UserMenu.jsx';
 
-// Toggle sits beside the search icon, as specified. Search is a quick page-jump
-// over the user's own navigation (data search arrives with each module).
-export default function TopBar({ onToggle, navFlat, profile, role, sidebarExpanded }) {
+// Search and user controls. The sidebar toggle is now inside the sidebar itself.
+export default function TopBar({ navFlat, profile, role, accountItems, onSignOut, isMobile = false, menuOpen = false, onMenu }) {
   const navigate = useNavigate();
   const [searching, setSearching] = useState(false);
   const [query, setQuery] = useState('');
@@ -24,10 +24,12 @@ export default function TopBar({ onToggle, navFlat, profile, role, sidebarExpand
   return (
     <header className="topbar">
       <div className="topbar__left">
-        <button type="button" className="icon-btn" onClick={onToggle} aria-label="Toggle navigation"
-          aria-controls="sidebar" aria-expanded={sidebarExpanded}>
-          <Icon name="menu" />
-        </button>
+        {isMobile && (
+          <button type="button" className="icon-btn topbar__menu" onClick={onMenu} aria-label="Open navigation menu"
+            aria-controls="sidebar" aria-expanded={menuOpen}>
+            <Icon name="menu" />
+          </button>
+        )}
         <button type="button" className="icon-btn" onClick={() => setSearching((s) => !s)} aria-label="Search pages" aria-expanded={searching}>
           <Icon name="search" />
         </button>
@@ -50,13 +52,7 @@ export default function TopBar({ onToggle, navFlat, profile, role, sidebarExpand
 
       <div className="topbar__right">
         <NotificationBell />
-        <Link to="/profile" className="userchip" aria-label="Open my profile">
-          <span className="userchip__avatar" aria-hidden="true">{(profile?.displayName || '?').charAt(0).toUpperCase()}</span>
-          <span className="userchip__text">
-            <strong>{profile?.displayName}</strong>
-            <small>{role}</small>
-          </span>
-        </Link>
+        <UserMenu profile={profile} role={role} items={accountItems} onSignOut={onSignOut} />
       </div>
     </header>
   );

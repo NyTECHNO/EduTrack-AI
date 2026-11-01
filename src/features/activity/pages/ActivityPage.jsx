@@ -54,8 +54,8 @@ export default function ActivityPage() {
         <select value={group} onChange={(e) => setGroup(e.target.value)} aria-label="Filter by area">
           <option value="all">All areas</option>{GROUPS.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
         </select>
-        <label className="field field--inline"><span>From</span><input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
-        <label className="field field--inline"><span>To</span><input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
+        <label className="datefield"><span>From</span><input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
+        <label className="datefield"><span>To</span><input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
       </div>
 
       {loading ? <p className="muted" role="status">Loading…</p>

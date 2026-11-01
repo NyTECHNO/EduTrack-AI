@@ -33,10 +33,11 @@ function Shell() {
     <div className={`shell${collapsed && !isMobile ? ' shell--rail' : ''}`}>
       <a className="skip-link" href="#content">Skip to content</a>
       <Sidebar nav={nav} collapsed={collapsed} isMobile={isMobile} open={drawerOpen}
-        onExpand={() => setCollapsed(false)} onClose={() => setDrawerOpen(false)} onSignOut={handleSignOut} />
+        onToggle={toggle} onExpand={() => setCollapsed(false)} onClose={() => setDrawerOpen(false)} />
       <div className="shell__main">
-        <TopBar onToggle={toggle} navFlat={nav.flat} profile={profile} role={role}
-          sidebarExpanded={isMobile ? drawerOpen : !collapsed} />
+        <TopBar navFlat={nav.flat} profile={profile} role={role}
+          accountItems={nav.account} onSignOut={handleSignOut}
+          isMobile={isMobile} menuOpen={drawerOpen} onMenu={toggle} />
         <main className="page" id="content" tabIndex={-1}><Outlet /></main>
       </div>
     </div>

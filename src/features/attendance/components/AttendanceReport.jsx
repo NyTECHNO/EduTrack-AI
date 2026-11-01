@@ -63,7 +63,7 @@ export default function AttendanceReport({ schedules, instructorId, canEdit, onE
 
   return (
     <div className="stack">
-      <div className={`toolbar ${instructorId ? 'toolbar--2' : 'toolbar--4'}`}>
+      <div className={`toolbar ${instructorId ? 'toolbar--3' : 'toolbar--report'}`}>
         {!instructorId && (
           <select value={instructorFilter} onChange={(e) => { setInstructorFilter(e.target.value); setScheduleId(''); }} aria-label="Filter by instructor">
             <option value="all">All instructors</option>
@@ -74,8 +74,8 @@ export default function AttendanceReport({ schedules, instructorId, canEdit, onE
           <option value="">Choose a class…</option>
           {options.map((s) => <option key={s.id} value={s.id}>{s.subjectCode} {s.section && `(${s.section}) `}· {s.instructorName} · {formatDays(s.days)} {formatTimeRange(s.startTime, s.endTime)}</option>)}
         </select>
-        <label className="field field--inline"><span>From</span><input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
-        <label className="field field--inline"><span>To</span><input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
+        <label className="datefield"><span>From</span><input type="date" value={from} onChange={(e) => setFrom(e.target.value)} /></label>
+        <label className="datefield"><span>To</span><input type="date" value={to} onChange={(e) => setTo(e.target.value)} /></label>
       </div>
 
       {!scheduleId ? <div className="card empty"><p><strong>Choose a class to see its attendance.</strong></p></div>

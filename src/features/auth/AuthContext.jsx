@@ -1,3 +1,4 @@
+import { profileName } from '../../lib/profile.js';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
@@ -37,7 +38,7 @@ export function AuthProvider({ children }) {
           setState({ ...SIGNED_OUT, error: 'This account is deactivated. Contact the school administrator.' });
           return;
         }
-        setActivityActor({ uid: user.uid, name: profile.displayName, role });
+        setActivityActor({ uid: user.uid, name: profileName(profile), role });
         setState({ loading: false, user, role, profile, error: '' });
       } catch {
         await signOutUser();
